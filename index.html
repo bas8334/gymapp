@@ -1,1 +1,118 @@
-twst
+<html lang="nl"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101714">
+<title>GymLog — Trainingslogboek</title>
+<style>
+:root{--bg:#0d1411;--panel:#17211c;--panel2:#1e2b24;--line:#304137;--text:#f2f7f3;--muted:#a7b8ac;--green:#a8f078;--green2:#72c94e;--red:#ff827c;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,input,select{font:inherit}button{border:0;cursor:pointer}.app{max-width:760px;margin:auto;padding:18px 16px 100px}.top{display:flex;justify-content:space-between;align-items:center;margin:4px 0 20px}.brand{font-weight:850;font-size:24px;letter-spacing:-.8px}.brand span{color:var(--green)}.sub{font-size:12px;color:var(--muted);margin-top:3px}.pill{background:#25352b;color:var(--green);padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700}
+.tabs{display:flex;gap:8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 14px}.tab{flex:1;background:var(--panel);color:var(--muted);padding:12px 8px;border-radius:13px;font-size:13px;font-weight:700}.tab.active{background:var(--green);color:#14200f}
+h1{font-size:27px;letter-spacing:-.8px;margin:8px 0 5px}h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}.section{margin:18px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:10px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.stack{display:grid;gap:10px}.btn{background:var(--green);color:#13200e;padding:12px 15px;border-radius:13px;font-weight:800}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--muted);padding:9px}.btn.danger{background:#482522;color:#ffb4ae}.btn.full{width:100%}
+input,select{width:100%;background:#101914;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px;outline:none;min-width:0}input:focus,select:focus{border-color:var(--green2)}label{display:block;color:var(--muted);font-size:12px;margin:0 0 6px}.field{min-width:0}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.category-title{font-size:12px;color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px}.exercise{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:7px 0;gap:10px}.exercise strong{display:block}.exercise small{color:var(--muted)}.exercise button{flex-shrink:0}
+.sethead,.setrow{display:grid;grid-template-columns:38px 1fr 1fr 40px;gap:8px;align-items:center}.sethead{font-size:11px;color:var(--muted);padding:0 5px 7px}.setrow{margin:7px 0}.setnum{color:var(--muted);text-align:center;font-weight:700}.setrow input{padding:11px 7px;text-align:center}.iconbtn{background:var(--panel2);color:var(--muted);border-radius:10px;padding:10px}.chartwrap{height:210px;position:relative;margin:12px 0 4px}.chartwrap canvas{width:100%;height:100%;display:block}.empty{text-align:center;padding:28px 12px;color:var(--muted)}.hidden{display:none!important}.historyitem{padding:12px 0;border-bottom:1px solid var(--line)}.historyitem:last-child{border:0}.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#e8f8df;color:#14200f;padding:10px 16px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:10}.toast.show{opacity:1}.footnote{font-size:11px;color:var(--muted);line-height:1.5;margin-top:18px}
+@media(min-width:600px){.app{padding-left:24px;padding-right:24px}.exercise-list{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top"><div><div class="brand">GYM<span>LOG</span></div><div class="sub">Jouw training. Jouw progressie.</div></div><div class="pill" id="saveStatus">● Opgeslagen</div></header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="train">Training</button>
+    <button class="tab" data-tab="oefeningen">Oefeningen</button>
+    <button class="tab" data-tab="progressie">Progressie</button>
+  </nav>
+
+  <main id="train" class="page">
+    <div class="row"><div><h1>Training</h1><div class="muted small" id="today">vrijdag 20 november 2026</div></div><button class="btn secondary" id="newWorkout">＋ Nieuwe training</button></div>
+    <section class="card" id="workoutCard">
+      <div class="row"><div><div class="small">HUIDIGE SESSIE</div><h2 id="workoutTitle" style="margin:5px 0">Training</h2></div><span class="pill" id="setCount">0 sets</span></div>
+      <div class="small" id="workoutDate">19 nov 2026</div>
+      <div id="activeExercises" class="section"><div class="empty">Kies hieronder een oefening om te beginnen.</div></div>
+      <div class="row"><button class="btn secondary" id="finishWorkout">Training afronden</button><span class="small" id="autosave">Automatisch opgeslagen</span></div>
+    </section>
+    <div class="section"><h2>Kies een oefening</h2><div class="small">Tik op een oefening om sets toe te voegen aan je huidige training.</div><div id="quickExercises"><div class="category-title">Borst</div><div class="exercise-list"><div class="exercise"><div><strong>Bench press</strong><small>Borst</small></div><button class="btn" data-add="mwo2y4zv08fos">＋</button></div></div><div class="category-title">Benen</div><div class="exercise-list"><div class="exercise"><div><strong>Leg press</strong><small>Benen</small></div><button class="btn" data-add="mwo2xkw11pq6n">＋</button></div></div></div></div>
+  </main>
+
+  <main id="oefeningen" class="page hidden">
+    <h1>Oefeningen</h1><p class="muted">Maak je eigen categorieën en voeg oefeningen toe.</p>
+    <section class="card">
+      <h2>Categorie toevoegen</h2><div class="row"><div class="field" style="flex:1"><input id="categoryName" placeholder="Bijv. Borst, Rug, Benen"></div><button class="btn" id="addCategory">Toevoegen</button></div>
+    </section>
+    <section class="card">
+      <h2>Oefening toevoegen</h2>
+      <div class="stack"><div class="field"><label>Naam oefening</label><input id="exerciseName" placeholder="Bijv. Bench press"></div><div class="field"><label>Categorie</label><select id="exerciseCategory"><option>Borst</option><option>Rug</option><option>Schouders</option><option>Benen</option><option>Armen</option><option>Buik</option></select></div><button class="btn full" id="addExercise">＋ Oefening toevoegen</button></div>
+    </section>
+    <div id="manageExercises"><div class="category-title">Borst</div><div class="exercise"><div><strong>Bench press</strong><small>Borst</small></div><button class="btn danger" data-delete="mwo2y4zv08fos">Verwijder</button></div><div class="category-title">Rug</div><div class="small">Nog geen oefeningen</div><div class="category-title">Schouders</div><div class="small">Nog geen oefeningen</div><div class="category-title">Benen</div><div class="exercise"><div><strong>Leg press</strong><small>Benen</small></div><button class="btn danger" data-delete="mwo2xkw11pq6n">Verwijder</button></div><div class="category-title">Armen</div><div class="small">Nog geen oefeningen</div><div class="category-title">Buik</div><div class="small">Nog geen oefeningen</div></div>
+  </main>
+
+  <main id="progressie" class="page hidden">
+    <h1>Progressie</h1><p class="muted">Bekijk hoe je prestaties zich ontwikkelen per oefening.</p>
+    <section class="card"><label>Selecteer oefening</label><select id="progressExercise"><option value="mwo2xkw11pq6n">Leg press</option><option value="mwo2y4zv08fos">Bench press</option></select><div id="progressSummary" class="section"><div class="row"><div><div class="small">PERSOONLIJK RECORD</div><div style="font-size:30px;font-weight:850">10 <span class="small">kg</span></div></div><div style="text-align:right"><div class="small">SESSIES</div><div style="font-size:25px;font-weight:800">1</div></div></div></div><div class="chartwrap"><canvas id="progressChart" width="0" height="0"></canvas></div><div class="small">Grafiek toont je zwaarste set (kg) per trainingssessie.</div></section>
+    <section class="card"><h2>Trainingsgeschiedenis</h2><div id="history"><div class="historyitem"><div class="row"><strong>19 nov 2026</strong><strong>10 kg</strong></div><div class="small">– reps × 10 kg</div></div></div></section>
+  </main>
+  <p class="footnote">Je gegevens worden lokaal in deze browser op je iPhone bewaard. Ze worden niet online gesynchroniseerd. Wis je browsergegevens niet als je je logboek wilt behouden. Gebruik ‘Exporteer back-up’ om een reservekopie te maken.</p>
+  <div class="row" style="margin-top:12px"><button class="btn secondary" id="exportData">Exporteer back-up</button><label class="btn secondary" style="margin:0;cursor:pointer">Importeer back-up<input type="file" id="importData" accept="application/json" hidden=""></label></div>
+</div>
+<div class="toast" id="toast">Opgeslagen</div>
+<script>
+(()=>{
+const KEY='gymlog_v1';
+const defaults={categories:['Borst','Rug','Schouders','Benen','Armen','Buik'],exercises:[],workouts:[],current:null};
+const $=id=>document.getElementById(id), uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+let data;
+try{data=JSON.parse(localStorage.getItem(KEY))||JSON.parse(JSON.stringify(defaults))}catch(e){data=JSON.parse(JSON.stringify(defaults))}
+if(!data.categories)data.categories=defaults.categories;if(!data.exercises)data.exercises=[];if(!data.workouts)data.workouts=[];if(!data.current)data.current={id:uid(),date:new Date().toISOString(),exercises:[]};
+const dateStr=d=>new Date(d).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'});
+function save(){localStorage.setItem(KEY,JSON.stringify(data));$('saveStatus').textContent='● Opgeslagen';$('autosave').textContent='Automatisch opgeslagen';}
+function toast(t='Opgeslagen'){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400)}
+function getExercise(id){return data.exercises.find(x=>x.id===id)}
+function allSessions(){return [...data.workouts,...(data.current?.exercises?.length?[data.current]:[])].sort((a,b)=>new Date(a.date)-new Date(b.date))}
+function renderTabs(tab){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!==tab));document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='progressie')renderProgress();if(tab==='oefeningen')renderManage()}
+document.querySelectorAll('.tab').forEach(b=>{b.addEventListener('click',()=>renderTabs(b.getAttribute('data-tab')));});
+$('today').textContent=new Date().toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function renderSelects(){const opts=data.categories.map(c=>`<option>${esc(c)}</option>`).join('');$('exerciseCategory').innerHTML=opts||'<option>Algemeen</option>';const ex=data.exercises;$('progressExercise').innerHTML=ex.length?ex.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join(''):'<option value="">Voeg eerst oefeningen toe</option>'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderQuick(){let html='';data.categories.forEach(cat=>{const list=data.exercises.filter(e=>e.category===cat);if(list.length)html+=`<div class="category-title">${esc(cat)}</div><div class="exercise-list">${list.map(e=>`<div class="exercise"><div><strong>${esc(e.name)}</strong><small>${esc(e.category)}</small></div><button class="btn" data-add="${e.id}">＋</button></div>`).join('')}</div>`});$('quickExercises').innerHTML=html||'<div class="empty">Nog geen oefeningen. Voeg ze toe via het tabblad Oefeningen.</div>';document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addToWorkout(b.dataset.add))}
+function addToWorkout(id){if(!getExercise(id))return;if(!data.current)data.current={id:uid(),date:new Date().toISOString(),exercises:[]};let item=data.current.exercises.find(x=>x.exerciseId===id);if(!item){item={exerciseId:id,sets:[{reps:'',weight:''}]};data.current.exercises.push(item)}else item.sets.push({reps:'',weight:''});save();renderWorkout();toast('Oefening toegevoegd')}
+function renderWorkout(){const w=data.current;$('workoutTitle').textContent='Training';$('workoutDate').textContent=dateStr(w.date);let total=w.exercises.reduce((n,e)=>n+e.sets.length,0);$('setCount').textContent=total+' sets';if(!w.exercises.length){$('activeExercises').innerHTML='<div class="empty">Kies hieronder een oefening om te beginnen.</div>';return}
+$('activeExercises').innerHTML=w.exercises.map((item,ix)=>{const ex=getExercise(item.exerciseId);if(!ex)return '';return `<div class="section"><div class="row"><h2>${esc(ex.name)}</h2><button class="btn ghost" data-remove="${ix}">Verwijder</button></div><div class="sethead"><span>SET</span><span>REPS</span><span>GEWICHT (KG)</span><span></span></div>${item.sets.map((s,si)=>`<div class="setrow"><span class="setnum">${si+1}</span><input inputmode="numeric" type="number" min="0" placeholder="10" value="${esc(s.reps)}" data-field="reps" data-ex="${ix}" data-set="${si}"><input inputmode="decimal" type="number" min="0" step="0.5" placeholder="kg" value="${esc(s.weight)}" data-field="weight" data-ex="${ix}" data-set="${si}"><button class="iconbtn" data-delset="${ix},${si}">×</button></div>`).join('')}<button class="btn secondary full" data-more="${ix}">＋ Set toevoegen</button></div>`}).join('');
+document.querySelectorAll('[data-field]').forEach(i=>i.oninput=()=>{let s=data.current.exercises[+i.dataset.ex].sets[+i.dataset.set];s[i.dataset.field]=i.value;save();updateCount()});
+document.querySelectorAll('[data-more]').forEach(b=>b.onclick=()=>{data.current.exercises[+b.dataset.more].sets.push({reps:'',weight:''});save();renderWorkout()});
+document.querySelectorAll('[data-delset]').forEach(b=>b.onclick=()=>{let [x,y]=b.dataset.delset.split(',').map(Number);data.current.exercises[x].sets.splice(y,1);if(!data.current.exercises[x].sets.length)data.current.exercises.splice(x,1);save();renderWorkout()});
+document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{data.current.exercises.splice(+b.dataset.remove,1);save();renderWorkout()});
+}
+function updateCount(){let n=data.current.exercises.reduce((a,e)=>a+e.sets.length,0);$('setCount').textContent=n+' sets'}
+$('newWorkout').onclick=()=>{if(data.current.exercises.length&&!confirm('Huidige training afronden en een nieuwe starten?'))return;if(data.current.exercises.length)finish(false);data.current={id:uid(),date:new Date().toISOString(),exercises:[]};save();renderWorkout();toast('Nieuwe training gestart')};
+function finish(show=true){if(!data.current.exercises.length){if(show)toast('Voeg eerst een oefening toe');return}data.workouts.push(data.current);data.current={id:uid(),date:new Date().toISOString(),exercises:[]};save();renderWorkout();if(show){toast('Training opgeslagen');renderTabs('progressie')}}
+$('finishWorkout').onclick=()=>finish(true);
+$('addCategory').onclick=()=>{let v=$('categoryName').value.trim();if(!v)return;if(data.categories.some(c=>c.toLowerCase()===v.toLowerCase()))return toast('Categorie bestaat al');data.categories.push(v);$('categoryName').value='';save();renderSelects();renderManage();toast('Categorie toegevoegd')};
+$('addExercise').onclick=()=>{let name=$('exerciseName').value.trim(),cat=$('exerciseCategory').value;if(!name)return toast('Vul een oefening in');data.exercises.push({id:uid(),name,category:cat});$('exerciseName').value='';save();renderSelects();renderManage();renderQuick();toast('Oefening toegevoegd')};
+function renderManage(){
+  renderSelects();
+  $('manageExercises').innerHTML=data.categories.map(cat=>{
+    let es=data.exercises.filter(e=>e.category===cat);
+    let items=es.length ? es.map(e=>`<div class="exercise"><div><strong>${esc(e.name)}</strong><small>${esc(cat)}</small></div><button class="btn danger" data-delete="${e.id}">Verwijder</button></div>`).join('') : '<div class="small">Nog geen oefeningen</div>';
+    return `<div class="category-title">${esc(cat)}</div>${items}`;
+  }).join('');
+  document.querySelectorAll('[data-delete]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Oefening verwijderen? Bestaande trainingsgeschiedenis blijft bewaard.'))return;
+      data.exercises=data.exercises.filter(e=>e.id!==b.dataset.delete);
+      save();renderManage();renderQuick();
+    };
+  });
+}
+function renderProgress(){renderSelects();let id=$('progressExercise').value;if(!id){$('progressSummary').innerHTML='<div class="empty">Voeg oefeningen toe om progressie te bekijken.</div>';$('history').innerHTML='';draw([]);return}showProgress(id)}
+$('progressExercise').onchange=()=>showProgress($('progressExercise').value);
+function showProgress(id){let ex=getExercise(id);if(!ex)return;let points=[];allSessions().forEach(w=>{let item=w.exercises.find(e=>e.exerciseId===id);if(item){let max=Math.max(0,...item.sets.map(s=>Number(s.weight)||0));if(item.sets.some(s=>s.weight!==''))points.push({date:w.date,weight:max,sets:item.sets})}});let best=points.length?Math.max(...points.map(p=>p.weight)):0;$('progressSummary').innerHTML=`<div class="row"><div><div class="small">PERSOONLIJK RECORD</div><div style="font-size:30px;font-weight:850">${best} <span class="small">kg</span></div></div><div style="text-align:right"><div class="small">SESSIES</div><div style="font-size:25px;font-weight:800">${points.length}</div></div></div>`;draw(points);$('history').innerHTML=points.length?[...points].reverse().map(p=>`<div class="historyitem"><div class="row"><strong>${dateStr(p.date)}</strong><strong>${p.weight} kg</strong></div><div class="small">${p.sets.map(s=>(s.reps||'–')+' reps × '+(s.weight||'–')+' kg').join('  ·  ')}</div></div>`).join(''):'<div class="empty">Nog geen opgeslagen sets met gewicht voor deze oefening.</div>'}
+function draw(points){const c=$('progressChart'),ctx=c.getContext('2d'),w=c.clientWidth,h=c.clientHeight,dpr=window.devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);let pad={l:38,r:12,t:15,b:32};ctx.font='11px -apple-system';ctx.strokeStyle='#304137';ctx.fillStyle='#a7b8ac';ctx.lineWidth=1;if(!points.length){ctx.fillText('Nog geen data',pad.l,h/2);return}let vals=points.map(p=>p.weight),min=Math.min(0,...vals),max=Math.max(5,...vals),range=max-min||1;for(let i=0;i<4;i++){let y=pad.t+(h-pad.t-pad.b)*i/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText((max-(range*i/3)).toFixed(0),4,y+4)}let coords=points.map((p,i)=>({x:pad.l+(points.length===1?0:(w-pad.l-pad.r)*i/(points.length-1)),y:pad.t+(h-pad.t-pad.b)*(max-p.weight)/range}));ctx.strokeStyle='#a8f078';ctx.lineWidth=2.5;ctx.beginPath();coords.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();coords.forEach((p,i)=>{ctx.fillStyle='#a8f078';ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill();if(i===0||i===coords.length-1||coords.length<5){ctx.fillStyle='#a7b8ac';ctx.fillText(new Date(points[i].date).toLocaleDateString('nl-NL',{day:'numeric',month:'short'}),Math.max(0,Math.min(w-45,p.x-17)),h-8)}})}
+$('exportData').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gymlog-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('importData').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.categories)||!Array.isArray(d.exercises)||!Array.isArray(d.workouts))throw Error();data=d;if(!data.current)data.current={id:uid(),date:new Date().toISOString(),exercises:[]};save();renderAll();toast('Back-up geïmporteerd')}catch(err){alert('Dit bestand is geen geldige GymLog-back-up.')}e.target.value=''};
+function renderAll(){renderSelects();renderQuick();renderWorkout();renderManage();renderProgress()}
+renderAll();
+window.addEventListener('resize',()=>{if(!$('progressie').classList.contains('hidden'))renderProgress()});
+})();
+</script>
+
+</body></html>
